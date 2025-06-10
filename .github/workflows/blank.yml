@@ -1,0 +1,28 @@
+name: Workflow con Passaggio Valori
+
+on:
+  workflow_dispatch: # Permette di avviare il workflow manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Step 1 - Genera un valore
+      id: step1_generazione # Assegna un ID a questo step per referenziarlo
+      run: |
+        # Questo è un esempio: puoi generare qualsiasi valore tu voglia
+        VALORE_GENERATO="Ciao da Step 1!"
+        echo "valore_output=$VALORE_GENERATO" >> "$GITHUB_OUTPUT"
+        echo "Valore generato: $VALORE_GENERATO"
+
+    - name: Step 2 - Usa il valore dallo Step 1
+      run: |
+        # Accedi al valore usando l'ID dello step e il nome dell'output
+        VALORE_DA_STEP1="${{ steps.step1_generazione.outputs.valore_output }}"
+        echo "Il valore ricevuto dallo Step 1 è: $VALORE_DA_STEP1"
+
+        # Puoi ora usare questo valore per qualsiasi operazione nello Step 2
+        # Ad esempio, creare un file, passarlo a un altro comando, ecc.
+        echo "$VALORE_DA_STEP1" > output_step2.txt
+        echo "File 'output_step2.txt' creato con il valore."
